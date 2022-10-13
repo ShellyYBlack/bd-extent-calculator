@@ -1,13 +1,13 @@
 from bs4 import BeautifulSoup
 
 # Edit the path to your EAD file
-with open('/syblack/Downloads/bush.xml', 'r') as f:
+with open('/syblack/Downloads/mc00006.xml', 'r') as f:
     file = f.read()
 
 soup = BeautifulSoup(file, 'xml')
 
 # Replace string with your series title
-seriesTitle = soup.find('unittitle', string="Digital Media")
+seriesTitle = soup.find('unittitle', string="Audiovisual Materials")
 did = seriesTitle.parent
 
 # Create a list of c tags or file records
@@ -47,7 +47,6 @@ totalKB = sum(listKBint)
 totalMB = sum(listMBint)
 totalGB = sum(listGBint)
 totalFiles = sum(listFiles)
-print(totalGB)
 
 # Add up the lists of bytes and files to get grand totals
 extent = totalKB/1000+totalMB+totalGB*1000
