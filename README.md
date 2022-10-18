@@ -1,6 +1,6 @@
 # bd-extent-calculator
 
-This script calculates the total extent in MB and files from the quantity and unittype tags in an EAD finding aid. It currently provides the totals for a specific series.
+This script calculates the total extent in MB and files from the quantity and unittype tags in an EAD finding aid. It provides the totals for the entire collection and each series.
 
 It has not been tested on EAD3.
 
