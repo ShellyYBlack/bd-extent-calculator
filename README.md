@@ -8,6 +8,3 @@ It has not been tested on EAD3.
 2. Download EAD finding aid: `wget -O [collection ID].xml [URL]`
 3. Edit your EAD file path and the name of your series in `python3 parsing_ead.py`
 4. Run the script.
-
-## TODO
-Provide extents for every series and the whole collection.
