@@ -20,5 +20,4 @@ for filename in glob.glob(os.path.join(path,'*.xml')):
     grandGrandTotalSizeMB = grandGrandTotalSizeMB + grandTotalSizeMB
     grandGrandTotalFiles = grandGrandTotalFiles + grandTotalFiles
     numberCollections = numberCollections + 1
-print('')
-print("There are " + str(numberCollections) + " collections, totaling " + str(grandGrandTotalSizeMB) + " MB and " + str(grandGrandTotalFiles) + " files.")
+print("\n" + "There are " + str(numberCollections) + " collections, totaling " + str(round(grandGrandTotalSizeMB)) + " MB and " + str(grandGrandTotalFiles) + " files.")
