@@ -1,14 +1,14 @@
 from bs4 import BeautifulSoup
-from process_collection import process_collection
+from parse_collection import parse_collection
 import sys,os,glob
 
 scriptName, path = sys.argv
 
-grandGrandTotalSizeMB = 0
-grandGrandTotalFiles = 0
+collectionsTotalSizeMB = 0
+collectionsTotalFiles = 0
 numberCollections = 0
 
-print("Searching " + path)
+print("Title,MB,Files")
 
 # Calling each XML file from path to directory
 for filename in glob.glob(os.path.join(path,'*.xml')):
@@ -16,8 +16,8 @@ for filename in glob.glob(os.path.join(path,'*.xml')):
         file = f.read()
 
     soup = BeautifulSoup(file, 'xml')
-    grandTotalSizeMB, grandTotalFiles = process_collection(soup)
-    grandGrandTotalSizeMB = grandGrandTotalSizeMB + grandTotalSizeMB
-    grandGrandTotalFiles = grandGrandTotalFiles + grandTotalFiles
+    grandTotalSizeMB, grandTotalFiles = parse_collection(soup)
+    collectionsTotalSizeMB = collectionsTotalSizeMB + grandTotalSizeMB
+    collectionsTotalFiles = collectionsTotalFiles + grandTotalFiles
     numberCollections = numberCollections + 1
-print("\n" + "There are " + str(numberCollections) + " collections, totaling " + str(round(grandGrandTotalSizeMB)) + " MB and " + str(grandGrandTotalFiles) + " files.")
+print('"Total for ' + str(numberCollections) + ' collections",' + str(round(collectionsTotalSizeMB)) + ',' + str(collectionsTotalFiles))
