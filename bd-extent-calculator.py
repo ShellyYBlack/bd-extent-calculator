@@ -16,11 +16,12 @@ def parse_series(seriesTitle, collectionTitle):
         for quantity in c.findAll('quantity'):
             listQuantity.append(quantity)
 
-    # For each quantity tag, if its next sibling (unittype tag) has '...bytes' or 'Files' add to list
+    # For each quantity tag, if its next sibling (unittype tag) has bytes/files/websites, add to list
     listKB = []
     listMB = []
     listGB = []
     listFiles =[]
+    listWebsites = []
     for quantity in listQuantity:
         intQuantity = eval(quantity.text)
         if re.search('[kK]ilobytes?', quantity.next_sibling.text):
@@ -31,45 +32,50 @@ def parse_series(seriesTitle, collectionTitle):
             listGB.append(intQuantity)
         if re.search('[fF]iles?', quantity.next_sibling.text):
             listFiles.append(intQuantity)
+        if re.search('[wW]ebsites?', quantity.next_sibling.text):
+            listWebsites.append(intQuantity)
 
     # Get a sum total of the lists
     totalKB = sum(listKB)
     totalMB = sum(listMB)
     totalGB = sum(listGB)
     seriesTotalFiles = sum(listFiles)
+    seriesTotalWeb = sum(listWebsites)
 
-    # Add up the lists of bytes and files to get grand totals
+    # Add up the lists of bytes, files, and websites to get grand totals
     seriesTotalMB = totalKB/1024+totalMB+totalGB*1024
-    seriesResult = '"' + collectionTitle + '/' + seriesTitle.text + '"' + ',' + str(round(seriesTotalMB)) + ',' + str(seriesTotalFiles)
-    return [seriesTotalMB,seriesTotalFiles,seriesResult]
+    seriesResult = '"' + collectionTitle + '/' + seriesTitle.text + '"' + ',' + str(round(seriesTotalMB)) + ',' + str(seriesTotalFiles) + ',' + str(seriesTotalWeb)
+    return [seriesTotalMB,seriesTotalFiles,seriesTotalWeb,seriesResult]
 
 # This parses the collection
 def parse_collection(soup):
 
     collectionTotalSizeMB = 0
     collectionTotalFiles = 0
+    collectionTotalWeb = 0
     collectionTitle = soup.select('archdesc > did unittitle')[0].text
     seriesResultList = []
     
     # Get series titles
     seriesTitles = soup.select('dsc > c > did >  unittitle')
     for seriesTitle in seriesTitles:
-        seriesTotalMB, seriesTotalFiles, seriesResult = parse_series(seriesTitle,collectionTitle)
+        seriesTotalMB, seriesTotalFiles, seriesTotalWeb, seriesResult = parse_series(seriesTitle,collectionTitle)
         collectionTotalSizeMB = collectionTotalSizeMB + seriesTotalMB
         collectionTotalFiles = collectionTotalFiles + seriesTotalFiles
+        collectionTotalWeb = collectionTotalWeb + seriesTotalWeb
         seriesResultList.append(seriesResult)
     
-    print('"' + collectionTitle + '",' + str(round(collectionTotalSizeMB)) + ',' + str(collectionTotalFiles))
+    print('"' + collectionTitle + '",' + str(round(collectionTotalSizeMB)) + ',' + str(collectionTotalFiles) + ',' + str(collectionTotalWeb))
     for seriesResult in seriesResultList:
         print(seriesResult)
         
-    return [collectionTotalSizeMB,collectionTotalFiles]
+    return [collectionTotalSizeMB,collectionTotalFiles, collectionTotalWeb]
 
 # Main script
 scriptName, path = sys.argv
 parseOneEAD = path.endswith('.xml')
 
-print("Title,MB,Files")
+print("Title,MB,Files,Websites")
 
 if parseOneEAD:
     with open(path, 'r') as f:
@@ -80,6 +86,7 @@ if parseOneEAD:
 else:
     collectionsTotalSizeMB = 0
     collectionsTotalFiles = 0
+    collectionsTotalWeb = 0
     numberCollections = 0
     fileNameList = glob.glob(os.path.join(path,'*.xml'))
 
@@ -93,8 +100,9 @@ else:
             file = f.read()
 
         soup = BeautifulSoup(file, 'xml')
-        grandTotalSizeMB, grandTotalFiles = parse_collection(soup)
+        grandTotalSizeMB, grandTotalFiles, grandTotalWeb = parse_collection(soup)
         collectionsTotalSizeMB = collectionsTotalSizeMB + grandTotalSizeMB
         collectionsTotalFiles = collectionsTotalFiles + grandTotalFiles
+        collectionsTotalWeb = collectionsTotalWeb + grandTotalWeb
         numberCollections = numberCollections + 1
-    print('"Total for ' + str(numberCollections) + ' collections",' + str(round(collectionsTotalSizeMB)) + ',' + str(collectionsTotalFiles))
+    print('"Total for ' + str(numberCollections) + ' collections",' + str(round(collectionsTotalSizeMB)) + ',' + str(collectionsTotalFiles) + ',' + str(collectionsTotalWeb))
