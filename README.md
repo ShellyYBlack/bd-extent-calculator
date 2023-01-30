@@ -4,7 +4,7 @@ This script calculates the total extent in MB, files, and websites from the quan
 
 1. Change to your directory containing the Dockerfile.
 2. Build the image: `docker build -t bd-extent-calc .`
-3. Download finding aids: `docker run -v //c/Users/syblack/Documents/bd-extent-calculator/EAD-XML:/EAD-XML/ -it bd-extent-calc bash -c "wget https://www.lib.ncsu.edu/findingaids/ead.txt ; cd /EAD-XML ; bash /src/download-EAD.sh"` 
+3. Download finding aids: `docker run -v $PWD/EAD-XML:/EAD-XML/ -it bd-extent-calc bash -c "wget https://www.lib.ncsu.edu/findingaids/ead.txt ; cd /EAD-XML ; bash /src/download-EAD.sh"` 
 4. Calculate extents by replacing path to directory and running: `python3 bd-extent-calculator.py /EAD-XML > /EAD-XML/output.csv`
 
 ## Tips
