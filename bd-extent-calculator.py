@@ -23,17 +23,17 @@ def parse_series(seriesTitle, collectionTitle):
     listFiles =[]
     listWebsites = []
     for quantity in listQuantity:
-        intQuantity = eval(quantity.text)
+        strQuantity = quantity.text
         if re.search('[kK]ilobytes?', quantity.next_sibling.text):
-            listKB.append(intQuantity)
+            listKB.append(eval(strQuantity))
         if re.search('[mM]egabytes?', quantity.next_sibling.text):
-            listMB.append(intQuantity)
+            listMB.append(eval(strQuantity))
         if re.search('[gG]igabytes?', quantity.next_sibling.text):
-            listGB.append(intQuantity)
+            listGB.append(eval(strQuantity))
         if re.search('[fF]iles?', quantity.next_sibling.text):
-            listFiles.append(intQuantity)
+            listFiles.append(eval(strQuantity))
         if re.search('[wW]ebsites?', quantity.next_sibling.text):
-            listWebsites.append(intQuantity)
+            listWebsites.append(eval(strQuantity))
 
     # Get a sum total of the lists
     totalKB = sum(listKB)
