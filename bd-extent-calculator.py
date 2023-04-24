@@ -53,7 +53,12 @@ def parse_collection(soup):
     collectionTotalSizeMB = 0
     collectionTotalFiles = 0
     collectionTotalWeb = 0
-    collectionTitle = soup.select('archdesc > did unittitle')[0].text
+    x = soup.select_one('archdesc[level="collection"] > did > unittitle')
+    if x is not None:
+        collectionTitle = x.text
+    else:
+        print("The EAD XML file may be empty.")
+        sys.exit()
     seriesResultList = []
     
     # Get series titles
@@ -78,7 +83,7 @@ parseOneEAD = path.endswith('.xml')
 print("Title,MB,Files,Websites")
 
 if parseOneEAD:
-    with open(path, 'r') as f:
+    with open(path, 'r', encoding="utf8") as f:
         file = f.read()
 
     soup = BeautifulSoup(file, 'xml')
