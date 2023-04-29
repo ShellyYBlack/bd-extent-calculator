@@ -1,6 +1,6 @@
 # bd-extent-calculator
 
-This script calculates the total extent in MB, files, and websites from the quantity and unittype tags in EAD XML finding aids. It provides the totals for the entire collection and each series, as well as all the collections. 
+This script calculates the total extent in MB, files, and websites from the quantity and unittype tags in EAD3 XML finding aids. It provides the totals for the entire collection and each series, as well as all the collections. 
 
 1. Clone the repository: `git clone https://github.com/ShellyYBlack/bd-extent-calculator.git` Alternatively, you can also click the green <> Code button and download a ZIP of the files.
 1. Change to the bd-extent-calculator directory.
@@ -12,4 +12,4 @@ To download a single finding aid, run: `docker run -v $PWD/EAD-XML:/EAD-XML/ -it
 ## Tips
 - If you want to run the script on a single EAD XML file instead of a directory, in step 4, replace /EAD-XML with your file path.
 - If you only need to view the results in the terminal, in step 4, you can remove the `>` operator and what follows it.
-- This script works on EAD3 records that use \<c\> elements, rather than \<cxx\>.
+- This script works on EAD3 records that use \<c\> elements, rather than \<cxx\>. It was also written for records that do not have the id or level attributes in \<c\> elements.

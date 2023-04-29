@@ -5,15 +5,20 @@ import sys,os,glob,re
 def parse_series(seriesTitle, collectionTitle):
     did = seriesTitle.parent
 
-    # Create a list of c tags or file records
+    # Create a list of c tags, i.e. file or subseries
+    # This assumes there are no sub-series extents 
     listFileRecords =[]
     for sibling in did.next_siblings:
         listFileRecords.append(sibling)
+    # Add c tags below subseries to list
+    for sibling in listFileRecords:
+        for child in sibling.find_all('c'):    
+            listFileRecords.append(child)    
 
     # Create a list of all the quantity tags
     listQuantity =[]
     for c in listFileRecords:
-        for quantity in c.findAll('quantity'):
+        for quantity in c.find_all('quantity'):
             listQuantity.append(quantity)
 
     # For each quantity tag, if its next sibling (unittype tag) has bytes/files/websites, add to list
@@ -83,7 +88,7 @@ parseOneEAD = path.endswith('.xml')
 print("Title,MB,Files,Websites")
 
 if parseOneEAD:
-    with open(path, 'r', encoding="utf8") as f:
+    with open(path, 'r', encoding="utf-8") as f:
         file = f.read()
 
     soup = BeautifulSoup(file, 'xml')
@@ -101,7 +106,7 @@ else:
 
     # Calling each XML file from path to directory
     for filename in fileNameList:
-        with open(filename, 'r') as f:
+        with open(filename, 'r', encoding="utf-8") as f:
             file = f.read()
 
         soup = BeautifulSoup(file, 'xml')
