@@ -1,4 +1,4 @@
-from bs4 import BeautifulSoup,NavigableString,Tag
+from bs4 import BeautifulSoup,Tag
 import sys,os,glob,re
 
 # This parses the series
@@ -9,12 +9,11 @@ def parse_series(seriesTitle, collectionTitle):
     # This assumes there are no sub-series extents 
     listFileRecords =[]
     for sibling in did.next_siblings:
-        listFileRecords.append(sibling)
+        if isinstance(sibling, Tag):
+            listFileRecords.append(sibling)
     # Add c tags below subseries to list
     for sibling in listFileRecords:
         for child in sibling.find_all('c'):
-            if isinstance(child,NavigableString):
-                continue
             if isinstance(child, Tag):
                 listFileRecords.append(child)
                                 
@@ -32,15 +31,17 @@ def parse_series(seriesTitle, collectionTitle):
     listWebsites = []
     for quantity in listQuantity:
         strQuantity = quantity.text
-        if re.search('[kK]ilobytes?', quantity.next_sibling.text):
+        # This assumes there will always be a unittype somewhere after quantity
+        unittype = quantity.find_next_sibling("unittype")
+        if re.search('[kK]ilobytes?', unittype.text):
             listKB.append(eval(strQuantity))
-        if re.search('[mM]egabytes?', quantity.next_sibling.text):
+        if re.search('[mM]egabytes?', unittype.text):
             listMB.append(eval(strQuantity))
-        if re.search('[gG]igabytes?', quantity.next_sibling.text):
+        if re.search('[gG]igabytes?', unittype.text):
             listGB.append(eval(strQuantity))
-        if re.search('[fF]iles?', quantity.next_sibling.text):
+        if re.search('[fF]iles?', unittype.text):
             listFiles.append(eval(strQuantity))
-        if re.search('[wW]ebsites?', quantity.next_sibling.text):
+        if re.search('[wW]ebsites?', unittype.text):
             listWebsites.append(eval(strQuantity))
 
     # Get a sum total of the lists
