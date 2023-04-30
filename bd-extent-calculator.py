@@ -1,4 +1,4 @@
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup,NavigableString,Tag
 import sys,os,glob,re
 
 # This parses the series
@@ -12,9 +12,12 @@ def parse_series(seriesTitle, collectionTitle):
         listFileRecords.append(sibling)
     # Add c tags below subseries to list
     for sibling in listFileRecords:
-        for child in sibling.find_all('c'):    
-            listFileRecords.append(child)    
-
+        for child in sibling.find_all('c'):
+            if isinstance(child,NavigableString):
+                continue
+            if isinstance(child, Tag):
+                listFileRecords.append(child)
+                                
     # Create a list of all the quantity tags
     listQuantity =[]
     for c in listFileRecords:
@@ -58,7 +61,7 @@ def parse_collection(soup):
     collectionTotalSizeMB = 0
     collectionTotalFiles = 0
     collectionTotalWeb = 0
-    x = soup.select_one('archdesc[level="collection"] > did > unittitle')
+    x = soup.select_one('archdesc > did > unittitle')
     if x is not None:
         collectionTitle = x.text
     else:
