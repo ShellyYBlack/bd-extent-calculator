@@ -3,6 +3,7 @@
 This script calculates the total extent in MB, files, and websites from the quantity and unittype tags in EAD3 XML finding aids. It provides the totals for the entire collection and each series, as well as all the collections. 
 
 1. Clone the repository:
+
     `git clone https://github.com/ShellyYBlack/bd-extent-calculator.git`
     * Alternatively, you can also click the green <> Code button and download a ZIP of the files.
 1. Change to the born-digital-reporting directory: `cd bdap-reporting`
